@@ -6,8 +6,6 @@ import myNavbar from './components/myNavbar/myNavbar';
 import 'bootstrap';
 import '../styles/main.scss';
 
-console.error('test');
-
 const init = () => {
   firebase.initializeApp(apiKeys.firebaseConfig);
   authData.checkLoginStatus();
