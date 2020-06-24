@@ -11,14 +11,18 @@ const getMushrooms = () => new Promise((resolve, reject) => {
       // format it into an array of objects
       const mushrooms = [];
       // adding the id onto each object and add to array
-      Object.keys(mushroomObjects).forEach((mushroomId) => {
-        mushroomObjects[mushroomId].id = mushroomId;
-        mushrooms.push(mushroomObjects[mushroomId]);
-      });
+      if (mushroomObjects) {
+        Object.keys(mushroomObjects).forEach((mushroomId) => {
+          mushroomObjects[mushroomId].id = mushroomId;
+          mushrooms.push(mushroomObjects[mushroomId]);
+        });
+      }
       // resolve the new array of objects
       resolve(mushrooms);
     })
     .catch((err) => reject(err));
 });
 
-export default { getMushrooms };
+const deleteMushroom = (mushroomId) => axios.delete(`${baseUrl}/mushrooms/${mushroomId}.json`);
+
+export default { getMushrooms, deleteMushroom };
