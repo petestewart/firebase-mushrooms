@@ -6,7 +6,7 @@ import singleMycologist from '../singleMycologist/singleMycologist';
 const buildHut = () => {
   mycologistData.getMycologists()
     .then((mycologists) => {
-      console.error('get mycologists worked!', mycologists);
+      // console.error('get mycologists worked!', mycologists);
       let domString = `
       <h2 class="text-center">Hut</h2>
       <div class="d-flex flex-wrap">
