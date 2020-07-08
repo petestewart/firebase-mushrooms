@@ -1,3 +1,4 @@
+// import utils from '../utils';
 import mycologistData from './mycologistData';
 import mycologistMushroomData from './mycologistMushroomsData';
 import mushroomData from './mushroomData';
@@ -33,4 +34,37 @@ const totallyRemoveShroomie = (mushroomId) => new Promise((resolve, reject) => {
     .catch((err) => reject(err));
 });
 
-export default { getSingleMycoWithShrooms, totallyRemoveShroomie };
+const getMushroomsWithOwners = () => new Promise((resolve, reject) => {
+  mushroomData.getMushrooms()
+    .then((allMushrooms) => {
+      mycologistData.getMycologists().then((allMycos) => {
+        mycologistMushroomData.getAllMycoShrooms().then((allMycoMushrooms) => {
+          const finalMushrooms = [];
+          // loop over each mushroom
+          allMushrooms.forEach((oneMush) => {
+            // add each myco to singleMush
+            const mushroom = { mycologists: [], ...oneMush };
+
+            // find all mycoMush's for current mush
+            const mycoMushroomOwners = allMycoMushrooms.filter((mms) => mms.mushroomId === mushroom.id);
+
+            allMycos.forEach((oneMyco) => {
+              const myco = { ...oneMyco };
+              // add oneMyco.isChecked if oneMyco owns this schroom
+              const isOwner = mycoMushroomOwners.find((mms) => mms.mycologistUid === myco.uid);
+              // add mycologistMushroomId, faking id where needed
+              myco.isChecked = (isOwner !== undefined);
+              myco.mycologistMushroomId = isOwner ? isOwner.id : `no-${mushroom.id}-${myco.id}`;
+              mushroom.mycologists.push(myco);
+            });
+
+            finalMushrooms.push(mushroom);
+          });
+          resolve(finalMushrooms);
+        });
+      });
+    })
+    .catch((err) => reject(err));
+});
+
+export default { getSingleMycoWithShrooms, totallyRemoveShroomie, getMushroomsWithOwners };
